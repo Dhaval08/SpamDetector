@@ -1,12 +1,5 @@
 import glob, os
-import re
-'''
-for root, subdirs, files in os.walk("/Users/shahdhaval/Downloads/Spam or Ham"):
-        print('--\nroot = ' + root)
 
-        if(os.path.basename(os.path.normpath(root)) == "spam"):
-            print("true")
-'''
 spam_files = 0
 ham_files = 0
 total_files = 0
@@ -17,8 +10,8 @@ spam_prob = {}
 ham_prob = {}
 distinct_words = []
 
-for root, subdirs, files in os.walk("/Users/shahdhaval/Downloads/Spam or Ham/Demo"):
-    if(os.path.basename(os.path.normpath(root)) == "spam1"):
+for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or Ham/train"):
+    if(os.path.basename(os.path.normpath(root)) == "spam"):
         os.chdir(root)
         for file in glob.glob("*.txt"):
             total_files = total_files+1
@@ -36,7 +29,7 @@ for root, subdirs, files in os.walk("/Users/shahdhaval/Downloads/Spam or Ham/Dem
                         else:
                             spam_words[word] = 2
 
-    elif(os.path.basename(os.path.normpath(root)) == "ham1"):
+    elif(os.path.basename(os.path.normpath(root)) == "ham"):
         os.chdir(root)
         for file in glob.glob("*.txt"):
             total_files = total_files+1
