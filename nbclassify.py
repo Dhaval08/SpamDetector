@@ -1,3 +1,6 @@
+#@author Dhaval Shah
+
+
 import glob, os
 import math
 
@@ -7,8 +10,10 @@ correctlyClassifiedHam = 0
 totalFiles = 0
 spamClassified = 0
 hamClassified= 0
+spamFiles = 0
+hamFiles = 0
 
-with open('/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt') as f:
+with open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt","r", encoding="latin1") as f:
     spam_probability = f.readline()
     ham_probability = f.readline()
 
@@ -18,15 +23,18 @@ with open('/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt'
 
 print(spam_probability)
 print(ham_probability)
-print(newDict)
 
 outputFile = open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nboutput.txt", "w")
 
-for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or Ham/dev"):
+for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI544/SpamHam/dev"):
         os.chdir(root)
         for file in glob.glob("*.txt"):
+            if(os.path.basename(os.path.normpath(root)) == "spam"):
+                spamFiles = spamFiles + 1
+            if(os.path.basename(os.path.normpath(root)) == "ham"):
+                hamFiles = hamFiles + 1
             totalFiles = totalFiles + 1
-            print(root+'/'+file)
+
             spam = 0
             ham = 0
             sum_spam = 0
@@ -45,9 +53,6 @@ for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or 
             spam = sum_spam + math.log(float(spam_probability))
             ham = sum_ham + math.log(float(ham_probability))
 
-            print(ham)
-
-
             if(spam>ham):
                 spamClassified = spamClassified + 1
                 if(os.path.basename(os.path.normpath(root)) == "spam"):
@@ -55,22 +60,28 @@ for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or 
 
                 outputFile.write("Spam"+" "+root+"/"+file+"\n")
 
-                print(spam)
-                print("spam")
             else:
                 hamClassified = hamClassified + 1
                 if(os.path.basename(os.path.normpath(root)) == "ham"):
                     correctlyClassifiedHam = correctlyClassifiedHam + 1
-
                 outputFile.write("Ham"+" "+root+"/"+file+"\n")
 
-                print(ham)
-                print("ham")
 
 
 print(correctlyClassifiedSpam)
 print(correctlyClassifiedHam)
 
-print(correctlyClassifiedSpam/spamClassified)
-print(correctlyClassifiedHam/hamClassified)
+print(spamClassified)
+print(hamClassified)
 
+spamPrecision = (correctlyClassifiedSpam/spamClassified)
+hamPrecision = (correctlyClassifiedHam/hamClassified)
+
+spamRecall = (correctlyClassifiedSpam/spamFiles)
+hamRecall = (correctlyClassifiedHam/hamFiles)
+
+spamF1 = (2*spamPrecision*spamRecall)/(spamPrecision+spamRecall)
+hamF1 = (2*hamPrecision*hamRecall)/(hamPrecision+hamRecall)
+
+print(spamF1)
+print(hamF1)

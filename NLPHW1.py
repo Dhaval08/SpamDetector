@@ -1,4 +1,6 @@
-import glob, os
+#@author Dhaval Shah
+
+import glob, os, sys
 
 spam_files = 0
 ham_files = 0
@@ -10,7 +12,10 @@ spam_prob = {}
 ham_prob = {}
 distinct_words = []
 
-for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or Ham/train"):
+spam_wordCount = 0
+ham_wordCount = 0
+
+for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI544/SpamHam/train"):
     if(os.path.basename(os.path.normpath(root)) == "spam"):
         os.chdir(root)
         for file in glob.glob("*.txt"):
@@ -18,11 +23,9 @@ for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or 
             spam_files = spam_files+1
             with open(file, "r", encoding="latin1") as f1:
                 for line in f1:
-                    line = ''.join(line.splitlines())
-                    for word in line.split():
+                    for word in line.strip().split():
 
-                        if word not in distinct_words:
-                            distinct_words.append(word)
+                        spam_wordCount = spam_wordCount+1
 
                         if word in spam_words:
                             spam_words[word] = spam_words.get(word) + 1
@@ -36,62 +39,70 @@ for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI 544/Spam or 
             ham_files = ham_files+1
             with open(file, "r", encoding="latin1") as f1:
                 for line in f1:
-                    line = ''.join(line.splitlines())
-                    for word in line.split():
+                    for word in line.strip().split():
 
-                        if word not in distinct_words:
-                            distinct_words.append(word)
+                        ham_wordCount = ham_wordCount+1
 
                         if word in ham_words:
                             ham_words[word] = ham_words.get(word) + 1
                         else:
                             ham_words[word] = 2
 
+for i in spam_words:
+    if i not in ham_words:
+        ham_words[i] = 1
+        ham_wordCount = ham_wordCount+1
+for i in ham_words:
+    if i not in spam_words:
+        spam_wordCount = spam_wordCount+1
+        spam_words[i] = 1
+
+'''
 for i in range (0, len(distinct_words)):
     if distinct_words[i] not in spam_words:
         spam_words[distinct_words[i]] = 1
     if distinct_words[i] not in ham_words:
         ham_words[distinct_words[i]] = 1
+'''
 
 probabilitySpam = spam_files/total_files
 probabilityHam = ham_files/total_files
 
+'''
 print(probabilityHam, probabilitySpam)
 
 print(spam_words)
 print(ham_words)
 print(distinct_words)
-
-spam_wordCount = 0
-ham_wordCount = 0
-
-for i in spam_words:
-    spam_wordCount = spam_wordCount + spam_words.get(i)
-
-for i in ham_words:
-    ham_wordCount = ham_wordCount + ham_words.get(i)
-
-print(spam_wordCount)
-print(ham_wordCount)
-
+'''
 for i in spam_words:
     spam_prob[i] = spam_words.get(i)/spam_wordCount
 
 for i in ham_words:
     ham_prob[i] = ham_words.get(i)/ham_wordCount
 
+'''
 print(spam_prob)
 print(ham_prob)
+'''
 
-file = open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt", "w")
+file = open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt", "w", encoding="latin1")
 file.write(str(probabilitySpam))
 file.write('\n')
 
 file.write(str(probabilityHam))
 file.write('\n')
 
-for i in distinct_words:
+print(spam_wordCount)
+print(ham_wordCount)
 
-    print_line = i+" "+str(spam_prob.get(i))+" "+str(ham_prob.get(i))
+for i in spam_words:
+
+    print_line = i+" "+str(spam_prob.get(i))+" "+str(ham_prob.get(i))+" "+str(spam_words.get(i))+" "+str(ham_words.get(i))
     file.write(print_line)
     file.write('\n')
+'''
+print("Spam Words"+str(spam_wordCount))
+
+print("Ham Words"+str(ham_wordCount))
+'''
