@@ -1,5 +1,8 @@
 #@author Dhaval Shah
 
+import sys
+
+filename = ' '.join(sys.argv[1:])
 
 import glob, os
 import math
@@ -13,7 +16,7 @@ hamClassified= 0
 spamFiles = 0
 hamFiles = 0
 
-with open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt","r", encoding="latin1") as f:
+with open("nbmodel.txt","r", encoding="latin1") as f:
     spam_probability = f.readline()
     ham_probability = f.readline()
 
@@ -24,9 +27,9 @@ with open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt"
 print(spam_probability)
 print(ham_probability)
 
-outputFile = open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nboutput.txt", "w")
+outputFile = open("nboutput.txt", "w")
 
-for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI544/SpamHam/dev"):
+for root, subdirs, files in os.walk(filename):
         os.chdir(root)
         for file in glob.glob("*.txt"):
             if(os.path.basename(os.path.normpath(root)) == "spam"):
@@ -67,13 +70,6 @@ for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI544/SpamHam/d
                 outputFile.write("Ham"+" "+root+"/"+file+"\n")
 
 
-
-print(correctlyClassifiedSpam)
-print(correctlyClassifiedHam)
-
-print(spamClassified)
-print(hamClassified)
-
 spamPrecision = (correctlyClassifiedSpam/spamClassified)
 hamPrecision = (correctlyClassifiedHam/hamClassified)
 
@@ -83,5 +79,11 @@ hamRecall = (correctlyClassifiedHam/hamFiles)
 spamF1 = (2*spamPrecision*spamRecall)/(spamPrecision+spamRecall)
 hamF1 = (2*hamPrecision*hamRecall)/(hamPrecision+hamRecall)
 
-print(spamF1)
-print(hamF1)
+print("Spam Precision: "+str(spamPrecision))
+print("Ham Precision: "+str(hamPrecision))
+
+print("Spam Recall: "+str(spamRecall))
+print("Ham Recall: "+str(hamRecall))
+
+print("Spam F1: "+str(spamF1))
+print("Ham F1: "+str(hamF1))

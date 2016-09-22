@@ -2,6 +2,10 @@
 
 import glob, os, sys
 
+outputFile = open("nbmodel.txt", "w", encoding="latin1")
+
+filename = ' '.join(sys.argv[1:])
+
 spam_files = 0
 ham_files = 0
 total_files = 0
@@ -15,7 +19,7 @@ distinct_words = []
 spam_wordCount = 0
 ham_wordCount = 0
 
-for root, subdirs, files in os.walk("/Users/shahdhaval/Desktop/CSCI544/SpamHam/train"):
+for root, subdirs, files in os.walk(filename):
     if(os.path.basename(os.path.normpath(root)) == "spam"):
         os.chdir(root)
         for file in glob.glob("*.txt"):
@@ -68,13 +72,6 @@ for i in range (0, len(distinct_words)):
 probabilitySpam = spam_files/total_files
 probabilityHam = ham_files/total_files
 
-'''
-print(probabilityHam, probabilitySpam)
-
-print(spam_words)
-print(ham_words)
-print(distinct_words)
-'''
 for i in spam_words:
     spam_prob[i] = spam_words.get(i)/spam_wordCount
 
@@ -86,12 +83,11 @@ print(spam_prob)
 print(ham_prob)
 '''
 
-file = open("/Users/shahdhaval/PycharmProjects/CSCI 544 - Naive Bayes/nbmodel.txt", "w", encoding="latin1")
-file.write(str(probabilitySpam))
-file.write('\n')
+outputFile.write(str(probabilitySpam))
+outputFile.write('\n')
 
-file.write(str(probabilityHam))
-file.write('\n')
+outputFile.write(str(probabilityHam))
+outputFile.write('\n')
 
 print(spam_wordCount)
 print(ham_wordCount)
@@ -99,10 +95,12 @@ print(ham_wordCount)
 for i in spam_words:
 
     print_line = i+" "+str(spam_prob.get(i))+" "+str(ham_prob.get(i))+" "+str(spam_words.get(i))+" "+str(ham_words.get(i))
-    file.write(print_line)
-    file.write('\n')
+    outputFile.write(print_line)
+    outputFile.write('\n')
 '''
 print("Spam Words"+str(spam_wordCount))
 
 print("Ham Words"+str(ham_wordCount))
 '''
+
+outputFile.close()
